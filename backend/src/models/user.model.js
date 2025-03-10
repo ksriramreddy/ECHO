@@ -23,10 +23,28 @@ const userSchema = new mongoose.Schema({
     profilePic : {
         type: String,
         default: ''
+    },
+    blockedUsers : {
+        type : String,
+        default : [],
+        required : false
+    },
+    onlineStatus : {
+        type : Boolean,
+        default : false
+    },
+    lastSeen : {
+        type : Date,
+        default : new Date()
+    },
+    statusMessage : {
+        type : String,
+        default : ''
     }
 },{
     timestamps: true
 })
+
 
 const User = mongoose.model('User', userSchema);
 
