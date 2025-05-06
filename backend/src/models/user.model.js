@@ -25,9 +25,8 @@ const userSchema = new mongoose.Schema({
         default: ''
     },
     blockedUsers : {
-        type : String,
+        type : [String],
         default : [],
-        required : false
     },
     onlineStatus : {
         type : Boolean,

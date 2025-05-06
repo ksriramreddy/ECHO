@@ -1,5 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import axios from '../lib/axios.js'
+import axiosInstance from '../lib/axios.js'
+import { Socket } from 'socket.io-client'
 
 const initialState = {
     user : JSON.parse(localStorage.getItem('user')) || null,
@@ -9,6 +11,9 @@ const initialState = {
     isSigningIn : false,
     isSigningUp : false,
     isCheckingAuth : false,
+    isUpdatingProfile : false,
+    socket : null,
+    onlineUsers : []
 }
 
 export const userSlice = createSlice({
@@ -33,18 +38,27 @@ export const userSlice = createSlice({
         },
         setIsCheckeingAuth : (state,action) => {
             state.isCheckingAuth = action.payload
-        }
+        },
+        setIsUpdatingProfile : (state,action) => {
+            state.isUpdatingProfile = action.payload
+        },
+        setSocket : (state,action) => {
+            state.socket = action.payload
+        },
+        setOnlineUsers : (state,action) => {
+            state.onlineUsers = action.payload
+        },
     }
 })
 
-export const {setError,setLoading,setUser,setIsAuthenticated,setIsCheckeingAuth} = userSlice.actions
+export const {setError,setLoading,setUser,setIsAuthenticated,setIsCheckeingAuth,setSocket,setOnlineUsers} = userSlice.actions
 
 export default userSlice.reducer
 
 export const checkAuth = () => async (dispatch) =>{
     dispatch(setIsCheckeingAuth(true))
     try {
-        const res = await axios.get('/auth/check')
+        const res = await axiosInstance.get('/auth/check')
         dispatch(setUser(res.data))
         dispatch(setIsAuthenticated(true))
         console.log("user form user store",res.data);
@@ -57,5 +71,24 @@ export const checkAuth = () => async (dispatch) =>{
     }
     finally{
         dispatch(setIsCheckeingAuth(false))
+    }
+}
+
+export const updateProfile = (profilePic) => async (dispatch) => {
+    try {
+        dispatch(setIsUpdatingProfile(true))
+        console.log("Updated user from user store");
+         axiosInstance.put('/auth/update-profile', {profilePic : profilePic })
+         .then((res)=>{
+            localStorage.setItem('user', JSON.stringify(res.data.updatedUser))
+            toast.success("Profile updated successfully")
+         }) 
+    } catch (error) {
+        console.log("Error updating profile checkAuth store ",error);
+        toast.error("error.response.data.message")
+    }
+    finally{
+        console.log('Updated user from');
+        dispatch(setIsUpdatingProfile(false))
     }
 }

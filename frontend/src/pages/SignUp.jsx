@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../lib/axios';
 import {setIsAuthenticated, setUser} from '../store/user.store.js'
 import toast from 'react-hot-toast';
+import useSocketIO from '../hooks/useSocket.io.js';
+import { useSocketStore } from '../socket.ioStore/socket.ioStore.js';
 const SignUp = () => {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
   const [formData, setFormData] = React.useState({
@@ -15,7 +17,10 @@ const SignUp = () => {
     email : '',
     password : '',
   })
+    const {connectSocket} = useSocketStore()
+  
   const dispatch = useDispatch()
+  // const {connectSocket} = useSocketIO()
   const {user,isSigningUp,isAuthenticated} = useSelector(state=>state.user)
   function handleSubmit (e){
     e.preventDefault()
@@ -26,6 +31,7 @@ const SignUp = () => {
         localStorage.setItem('user',JSON.stringify(resp.data))
         dispatch(setUser(resp.data))
         dispatch(setIsAuthenticated(true))
+        connectSocket()
         toast.success('Signup Success')
         console.log("asxasx",user);
       })

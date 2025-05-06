@@ -10,16 +10,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth, userSlice } from './store/user.store';
 import {Loader} from 'lucide-react'
 import {Toaster} from 'react-hot-toast'
+import useSocketIO from './hooks/useSocket.io';
+import { useSocketStore } from './socket.ioStore/socket.ioStore';
 const App = () => {
+  const {connectSocket} = useSocketStore()
 
   const dispatch = useDispatch()
   const {user,isAuthenticated,isCheckingAuth} = useSelector(state => state.user)
-  console.log(user);
+  const {selectedUser} = useSelector(state => state.chat)
+  // console.log(user);
+  // const {connectSocket} = useSocketIO()
+
 
   useEffect(()=>{
     checkAuth()
+    console.log("user from app.jsx",user);
+    connectSocket()
   },[checkAuth])
-  console.log("user from app.jsx",user);
 
   if(isCheckingAuth){
     return(
@@ -30,7 +37,7 @@ const App = () => {
   }
   
   return (
-    <div  className='pl-10 pr-10 dark:text-white'>
+    <div  className='pl-10 pr-10  dar:text-white' data-theme="lght">
       {
         isAuthenticated && <Navbar/>
       }
@@ -39,7 +46,7 @@ const App = () => {
         <Route path='/' element={user? <Home/> : <Navigate to={'/signin'}/>} />
         <Route path='/signup' element={user? <Navigate to={'/'}/> : <SignUp/>} />
         <Route path='/signin' element={ user? <Navigate to={'/'}/> : <SignIn/>} />
-        <Route path='/profile' element={user? <Profile/> : <Navigate to={'/signin'}/>} />
+        <Route path='/profile' element={user? <Profile user={user}/> : <Navigate to={'/signin'}/>} />
         <Route path='/settings' element={<Settings/>} />
       </Routes>
       <Toaster position='top-center' />

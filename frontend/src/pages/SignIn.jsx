@@ -7,6 +7,8 @@ import { formValidation } from '../lib/formValidation.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsAuthenticated, setUser } from '../store/user.store';
 import axiosInstance from '../lib/axios.js';
+import useSocketIO from '../hooks/useSocket.io.js';
+import { useSocketStore } from '../socket.ioStore/socket.ioStore.js';
 
 const SignIn = () => {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false)
@@ -14,9 +16,10 @@ const SignIn = () => {
     email: '',
     password: '',
   })
+  const {connectSocket} = useSocketStore()
   const dispatch = useDispatch()
   const { user, isSigningUp, isAuthenticated } = useSelector(state => state.user)
-
+  // const {connectSocket} = useSocketIO()
   function handleSubmit(e) {
     e.preventDefault()
     axiosInstance.post('/auth/signin', formData)
@@ -24,11 +27,13 @@ const SignIn = () => {
         localStorage.setItem('user', JSON.stringify(resp.data))
         dispatch(setUser(resp.data))
         dispatch(setIsAuthenticated(true))
+        connectSocket()
         toast.success('Login Success')
       })
       .catch((err) => {
         toast.error(err.response?.data?.message || 'Failed to signup')
       })
+    
   }
   function changeEyeStake(e){
     e.preventDefault()

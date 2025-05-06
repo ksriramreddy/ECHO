@@ -41,13 +41,18 @@ export const signup = async (req, res) => {
             generateToken(newUser._id,res)
             await newUser.save()
 
-            return res.status(201).json({
-                _id: newUser._id,
-                userName : newUser.userName,
-                fullName: newUser.fullName,
-                email: newUser.email,
-                profilePic: newUser.profilePic,
-            })
+            return res.json({
+            _id: newUser._id,
+            userName : newUser.userName,
+            fullName: newUser.fullName,
+            email: newUser.email,
+            profilePic: newUser.profilePic,
+            blockedUsers: newUser.blockedUsers,
+            onlineStatus: newUser.onlineStatus,
+            lastSeen: newUser.lastSeen,
+            statusMessage: newUser.statusMessage,
+            createdAt: newUser.createdAt,
+        })
         } else {
             return res.status(400).json({message: "Failed to create user"})
         }
@@ -77,6 +82,11 @@ export const signin = async (req, res) => {
             fullName: user.fullName,
             email: user.email,
             profilePic: user.profilePic,
+            blockedUsers: user.blockedUsers,
+            onlineStatus: user.onlineStatus,
+            lastSeen: user.lastSeen,
+            statusMessage: user.statusMessage,
+            createdAt: user.createdAt,
         })
 
     } catch (error) {
@@ -107,6 +117,7 @@ export const updateProfile  = async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(userId, {profilePic : uploadResponse.secure_url}, {new: true})
 
         if(updatedUser){
+            console.log("Updated user: ", updatedUser);
             return res.json({
                 updatedUser
             })

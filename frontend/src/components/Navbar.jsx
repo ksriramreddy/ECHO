@@ -6,10 +6,11 @@ import { useDispatch } from 'react-redux';
 import { setIsAuthenticated, setUser } from '../store/user.store';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { useSocketStore } from '../socket.ioStore/socket.ioStore';
 
 
 const Navbar = () => {
-
+  const {disconnectSocket} =  useSocketStore()
   const dispatch = useDispatch()
   function handleLogout(){
 
@@ -18,6 +19,7 @@ const Navbar = () => {
       localStorage.removeItem('user')
       dispatch(setUser(null))
       dispatch(setIsAuthenticated(false))
+      disconnectSocket()
       toast.success("Logged out")
     })
     .catch((error)=>{
@@ -27,8 +29,8 @@ const Navbar = () => {
   }
 
   return (
-    <div className='w-full text-black bg-white flex flex-row items-center p-1 justify-between'>
-      <div className='  w-[100px] h-[50px]'>
+    <div className='w-full text-black bg-white flex flex-row items-center rounded-lg p-1 justify-between'>
+      <div className='  w-[100px] h-[65px] flex items-center justify-center'>
         <img src={echo} className='w-[100px] h-[50px]' alt="" />
       </div>
       <div className='flex gap-5 sm:gap-6'>
