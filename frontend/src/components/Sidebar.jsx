@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import defaultProfile from '../../public/profile.png';
 import { setUser } from '../store/user.store';
 import { useSocketStore } from '../socket.ioStore/socket.ioStore';
-import Echoai from './echoai';
+import Echoai from './Echoai';
 
 
 
