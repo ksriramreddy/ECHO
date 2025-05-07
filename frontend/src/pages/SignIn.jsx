@@ -16,6 +16,7 @@ const SignIn = () => {
     email: '',
     password: '',
   })
+  const [isloggingIn, setIsLoggingIn] = React.useState(false)
   const {connectSocket} = useSocketStore()
   const dispatch = useDispatch()
   const { user, isSigningUp, isAuthenticated } = useSelector(state => state.user)
@@ -71,7 +72,7 @@ const SignIn = () => {
             </div>
           </div>
           <div className='bg-blue-400 rounded-lg hover:bg-blue-500 w-[80%] text-center p-3'>
-            <input type="submit" value={"Signin"} className='w-full h-full cursor-pointer' />
+            <input type="submit" value={isloggingIn? "Logging in..." : "Login"} className='w-full h-full cursor-pointer' />
           </div>
         </form>
         <div className='text-center'>

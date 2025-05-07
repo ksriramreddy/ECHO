@@ -17,11 +17,11 @@ export const useSocketStore  = create((set,get)=>({
             }
         })
         socket.on('connect',()=>{
-            console.log('Socket connected from useSocket.io', socket);
+            // console.log('Socket connected from useSocket.io', socket);
             set({socket})
         })
         socket.on('getOnlineUsers', (users) => {
-            console.log('Online users>>>>>>>>>:', users)
+            // console.log('Online users>>>>>>>>>:', users)
             set({onlineUsers : users})
         })
     },
@@ -48,7 +48,7 @@ export const useSocketStore  = create((set,get)=>({
     userTyping : (users)=>{
         const {socket} = get()
         if(socket){
-            console.log('users typing from zustang', users);
+            // console.log('users typing from zustang', users);
             socket.emit('typing', users)
         }   
     },

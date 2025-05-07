@@ -139,3 +139,18 @@ export const checkAuth = (req, res) => {
         res.status(500).json({message: error.message})
     }
 }
+
+export const updateLastSeen = async (userId) => {
+    console.log("Updating last seen for user: ", userId);
+    console.log(userId);
+    
+    try {
+        if(!userId) return;
+        User.findByIdAndUpdate(userId, {lastSeen: Date.now()}, {new: true})
+        .then((updatedUser) => {
+                console.log("User not found: ", updatedUser);
+        })
+    } catch (error) {
+        console.log(`Error updating last seen: ${error.message}`)
+    }
+}

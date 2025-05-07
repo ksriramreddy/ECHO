@@ -4,22 +4,24 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../lib/axios';
 import axios from 'axios';
-import { setMessages } from '../store/chat.store';
+import { setAIChat, setAITyping, setMessages } from '../store/chat.store';
 import { useSocketStore } from '../socket.ioStore/socket.ioStore';
 const ChatInput = () => {
   const [input, setInput] = useState('');
   const [previewImage, setPreviewImage] = useState(null);
   const [sending, setSending] = useState(false);
   const dispatch = useDispatch();
-  const {selectedUser} = useSelector(state => state.chat)
+  const {selectedUser,ECHO,aiChat,aiTyping} = useSelector(state => state.chat)
   const {getMessages,messages,userTyping}  = useSocketStore()
-
+  const [isTyping, setIsTyping] = useState(false);
   const fileInputRef = useRef();
   function handleImageChange(e) {
     const file = e.target.files[0];
     if (!file) return;
+    // console.log(file);
+    
     if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file.');
+      toast.error('Sorry Selected file is not supported!');
       return;
     }
     const reader = new FileReader();
@@ -32,6 +34,38 @@ const ChatInput = () => {
     setPreviewImage(null);
     fileInputRef.current.value = null; // Clear the file input value
   }
+  async function handleSendMessageToAI(e){
+    e.preventDefault()
+    if(!input) { return; }
+    // if its loading prevent sending new message
+    dispatch(setAIChat([...aiChat,input]))
+    console.log("Sending message to AI",aiChat);
+    const prompt = input
+    setInput('')
+    dispatch(setAITyping(true))
+    console.log("is ai typing>>>>>>>>>",aiTyping);
+    try {
+      setIsTyping(true)
+      dispatch(setAIChat([...aiChat, input]))
+      axiosInstance.post('/gemini',{prompt, past: aiChat}) 
+      .then((resp)=>{
+        
+        dispatch(setAIChat([...aiChat,input, resp.data.resp])) // add the new message to the aiChat array
+        console.log(">>>>>>>>>>>>>>>>",aiChat);
+      })
+    } catch (error) {
+      toast.error('Failed to send message!');
+    }
+    finally {
+      dispatch(setAITyping(false))
+    }
+  }
+  const handleSubmit = (e)=>{
+    e.preventDefault()
+    if(selectedUser) handleSendMessage(e)
+    else handleSendMessageToAI(e)
+  }
+
   async function handleSendMessage(e) {
     if(!input && !previewImage) { return; }
     e.preventDefault()
@@ -68,21 +102,24 @@ const ChatInput = () => {
           </div>
         </div>)}
       </div>
-      <form onSubmit={handleSendMessage}>
+      <form onSubmit={handleSubmit}>
         <div className='flex items-center border border-gray-300 justify-between w-full h-12 bg-gray-200 p-2'>
           <input
             type="text"
             value={input} 
             onChange={(e) => {
               setInput(e.target.value)
+              if(ECHO) return
               userTyping({senderId : JSON.parse(localStorage.getItem('user'))._id, receiverId : selectedUser._id})
             }}
             placeholder="Type a message..." 
             className="w-full p-2 bg-transparent focus:outline-none "
           />
-          <input type="file" accept='image/*' ref={fileInputRef} className='hidden' onChange={handleImageChange} />
+          <input disabled={ECHO} type="file" accept='image/* , .heic ,HEIC' ref={fileInputRef} className='hidden' onChange={handleImageChange} />
           <button type='button' className='mr-2 cursor-pointer' onClick={()=> fileInputRef.current.click() }>
-          <Image color='green'/>
+            {
+              ECHO? " " : <Image  color='green'/>
+            }
           </button>
           <button type='submit' disabled={!input && !previewImage} className='cursor-pointer'>
             { sending ? <Loader size={20} className="text-blue-500" /> : <Send opacity={`${previewImage || input ? 1 : 0.2}`} />}

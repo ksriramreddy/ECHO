@@ -2,6 +2,7 @@ import {Server} from 'socket.io'
 import http from 'http'
 
 import express from 'express'
+import { updateLastSeen } from '../controllers/auth.controller.js'
 
 const app = express()
 const server = http.createServer(app)
@@ -32,9 +33,12 @@ io.on('connection', (socket)=>{
     })
     io.emit('getOnlineUsers', Object.keys(onlineUsers))
     socket.on('disconnect', ()=>{
-        console.log('user disconnected', socket.id)
+        console.log('user disconnecteddddddddd', socket.id)
         delete onlineUsers[userId]
         io.emit('getOnlineUsers', Object.keys(onlineUsers))
+        updateLastSeen(userId)
+        console.log('>>>>>>>>>>>');
+        
     })
     socket.on('typing',({senderId,receiverId})=>{
         // console.log('typing', users)

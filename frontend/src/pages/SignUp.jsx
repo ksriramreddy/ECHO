@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Mail, User, LockKeyhole, Eye,EyeOff,UserCheck} from 'lucide-react'
 import {Link} from 'react-router-dom'
 import echo from '../../public/echolightlogo.png'
@@ -21,9 +21,11 @@ const SignUp = () => {
   
   const dispatch = useDispatch()
   // const {connectSocket} = useSocketIO()
-  const {user,isSigningUp,isAuthenticated} = useSelector(state=>state.user)
+  const {user,isAuthenticated} = useSelector(state=>state.user)
+  const [isSigningUp, setIsSigningUp] = useState(false)
   function handleSubmit (e){
     e.preventDefault()
+    setIsSigningUp(true)
     const isValid = formValidation(formData)
     if(isValid){
       axiosInstance.post('/auth/signup',formData)
@@ -37,6 +39,9 @@ const SignUp = () => {
       })
       .catch((err)=>{
         toast.error(err.response?.data?.message || 'Failed to signup')
+      })
+      .finally(()=>{
+        setIsSigningUp(false)
       })
     }
   }
@@ -85,12 +90,12 @@ const SignUp = () => {
               <button onClick={changeEyeStake}>
               {
                 isPasswordVisible? <Eye strokeWidth={1} color='gray'/> : <EyeOff strokeWidth={1} color='gray'/>
-              }
+              }   
               </button>
-            </div>
+            </div>                                                                   
           </div>
           <div className='bg-blue-400 rounded-lg hover:bg-blue-500 w-[80%] text-center p-3'>
-            <input type="submit" className='w-full h-full cursor-pointer'  />
+            <input type="submit" className='w-full h-full cursor-pointer' value={isSigningUp? "Signing up..." : "Sign up"}  />
           </div>
         </form>
         <div className='text-center'>

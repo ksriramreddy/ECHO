@@ -30,9 +30,11 @@ const Navbar = () => {
 
   return (
     <div className='w-full text-black bg-white flex flex-row items-center rounded-lg p-1 justify-between'>
+      <Link to={'/'}>
       <div className='  w-[100px] h-[65px] flex items-center justify-center'>
         <img src={echo} className='w-[100px] h-[50px]' alt="" />
       </div>
+      </Link>
       <div className='flex gap-5 sm:gap-6'>
         <Link to={'/profile'}>
           <div className='flex flex-row items-center hover: justify-center gap-1 cursor-pointer'>
@@ -40,12 +42,12 @@ const Navbar = () => {
             <span className='text-xl hidden sm:block'>Profile</span>
           </div>
         </Link>
-        <Link to={'/settings'}>
+        {/* <Link to={'/settings'}>
           <div className='flex flex-row items-center justify-center gap-1 cursor-pointer'>
             <Settings strokeWidth={1} size={22} color='black'/> 
             <span className='text-xl hidden sm:block'>Settings</span>
           </div>
-        </Link>
+        </Link> */}
         <button onClick={handleLogout} className='mr-4 flex flex-row items-center justify-center gap-1 cursor-pointer'>
           <LogOut  strokeWidth={1} size={22} color='black'/> 
           <span className='text-xl hidden sm:block '>LogOut</span>
