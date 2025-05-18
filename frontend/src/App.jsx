@@ -16,15 +16,18 @@ const App = () => {
   const {connectSocket} = useSocketStore()
 
   const dispatch = useDispatch()
-  const {user,isAuthenticated,isCheckingAuth} = useSelector(state => state.user)
+  const {user,isAuthenticated,isCheckingAuth,theme} = useSelector(state => state.user)
   const {selectedUser} = useSelector(state => state.chat)
+
   // console.log(user);
   // const {connectSocket} = useSocketIO()
+
 
 
   useEffect(()=>{
     checkAuth()
     console.log("user from app.jsx",user);
+
     connectSocket()
   },[checkAuth])
 
@@ -37,7 +40,7 @@ const App = () => {
   }
   
   return (
-    <div  className='pl-10 pr-10  dark:text-white' data-theme="dark">
+    <div  className='pl-10 pr-10 bg-base-100' data-theme={`${theme? "dark" : "light"}`}>
       {
         isAuthenticated && <Navbar/>
       }

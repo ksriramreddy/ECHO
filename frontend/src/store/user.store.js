@@ -6,6 +6,7 @@ import { Socket } from 'socket.io-client'
 const initialState = {
     user : JSON.parse(localStorage.getItem('user')) || null,
     isAuthenticated : JSON.parse(localStorage.getItem('user'))? true : false,
+    theme : localStorage.getItem("echoTheme")? true : false,
     isLoading : false,
     isError : false,
     isSigningIn : false,
@@ -48,10 +49,13 @@ export const userSlice = createSlice({
         setOnlineUsers : (state,action) => {
             state.onlineUsers = action.payload
         },
+        setTheme: (state,action) =>{
+            state.theme = action.payload
+        }
     }
 })
 
-export const {setError,setLoading,setUser,setIsAuthenticated,setIsCheckeingAuth,setSocket,setOnlineUsers} = userSlice.actions
+export const {setError,setLoading,setUser,setIsAuthenticated,setIsCheckeingAuth,setSocket,setOnlineUsers,setTheme} = userSlice.actions
 
 export default userSlice.reducer
 

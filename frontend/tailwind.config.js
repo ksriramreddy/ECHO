@@ -3,7 +3,6 @@ import themes from "daisyui/theme/object"
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode : 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -13,6 +12,6 @@ export default {
   },
   plugins: [daisyui],
   daisyui: {
-    themes : all;
+    themes : "all"
   }
 }

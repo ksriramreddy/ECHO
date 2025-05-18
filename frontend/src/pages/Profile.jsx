@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { Mail, Calendar, User, MessageSquare, Eye, Lock, Loader } from "lucide-react";
-import { useState } from "react";
+import { Mail, Calendar, User, MessageSquare, Eye, Lock, Loader, Paintbrush,Moon ,Sun} from "lucide-react";
+import { useEffect, useState } from "react";
 import defaultProfile from '../../public/profile.png';
 import toast from 'react-hot-toast';
-import { updateProfile } from "../store/user.store";
+import { setTheme, updateProfile } from "../store/user.store";
 import axiosInstance from "../lib/axios";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const Profile = ({ user }) => {
@@ -14,7 +15,22 @@ const Profile = ({ user }) => {
     const handleStatusChange = (e) => {
         setStatusMessage(e.target.value);
     };
+    const {theme} = useSelector(state=>state.user)
+    const dispatch = useDispatch()
+    const changeTheme = (e) => {
+        e.preventDefault();
+        const newTheme = !theme;
+        dispatch(setTheme(newTheme))
+        localStorage.setItem("echoTheme", newTheme);
+    };
 
+useEffect(() => {
+  const savedTheme = localStorage.getItem("echoTheme");
+  setTheme(savedTheme === "true"); // convert string to boolean
+}, []);
+
+
+    
     const handleProfilePicChange =  (e) => {
         const file = e.target.files[0];
         if(!file) return toast.error('No image selected!');
@@ -45,7 +61,7 @@ const Profile = ({ user }) => {
 
     return (
         <motion.div 
-            className="bg-whit shadow-lg p-8 rounded-lg max-w-3xl w-full mx-auto mt-10 border border-blue-200"
+            className="bg-whit  shadow-lg p-8 rounded-lg max-w-3xl w-full mx-auto mt-10 border  bg-base-300"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -54,11 +70,11 @@ const Profile = ({ user }) => {
             <div className="flex flex-col items-center gap-4">
                 <motion.label 
                     htmlFor="profilePicInput" 
-                    className="cursor-pointer shadow-md w-40 h-40 rounded-full border-4 border-blue-500 flex items-center justify-center "
+                    className="cursor-pointer shadow-md w-40 h-40 rounded-full border-4  flex items-center justify-center "
                     whileHover={{ scale: 1.05 }}
                 >
                     {
-                        isLoading ? <Loader size={20} className="text-blue-500" /> : 
+                        isLoading ? <Loader size={20} className="" /> : 
                     
                     <img 
                         src={user.profilePic || defaultProfile} 
@@ -73,19 +89,34 @@ const Profile = ({ user }) => {
                     className="hidden" 
                     onChange={handleProfilePicChange}
                 />
-                <h2 className="text-2xl font-semibold text-blue-700">{user.fullName}</h2>
-                <p className="text-gray-600">@{user.userName}</p>
+                <h2 className="text-2xl font-semibold ">{user.fullName}</h2>
+                <p className="">@{user.userName}</p>
             </div>
 
             {/* Profile Details */}
-            <div className="mt-6 space-y-4 text-gray-800">
+            <div className="mt-6 space-y-4 ">
+                <div className="flex flex-row items-center gap-3 justify-between border-b pb-2">
+                    <div className=" flex items-center gap-3  pb-2">
+                        <Paintbrush />
+                        <p>Change theme</p>
+                    </div>
+                    <button onClick={changeTheme} className=" flex items-center gap-3 pb-2 cursor-pointer">
+                        <div className={`w-[50px] border rounded-2xl h-[30px] flex items-center transition-colors duration-100  ${theme? "justify-end bg-black":"justify-start bg-white"} pl-1.5 pr-1.5`}>
+                            {
+                                theme? <Moon className="w-[20px] text-white  rounded-full bg-black h-[20px]"/> :
+                                <Sun className="w-[20px]  rounded-full text-black h-[20px]"/>
+                            }
+                        </div>
+                    </button>
+                </div>
+                
                 <div className="flex items-center gap-3 border-b pb-2">
-                    <Mail size={20} className="text-blue-500" />
+                    <Mail size={20} className="" />
                     <p className="text-lg">{user.email}</p>
                 </div>
 
                 <div className="flex items-center gap-3 border-b pb-2">
-                    <Calendar size={20} className="text-blue-500" />
+                    <Calendar size={20} className="" />
                     <p className="text-lg">Member Since: {new Date(user.createdAt).toLocaleDateString()}</p>
                 </div>
 
@@ -95,13 +126,13 @@ const Profile = ({ user }) => {
                 </div>
 
                 <div className="flex items-center gap-3 border-b pb-2">
-                    <Calendar size={20} className="text-blue-500" />
+                    <Calendar size={20} className="" />
                     <p className="text-lg">Last Seen: {new Date(user.lastSeen).toLocaleString()}</p>
                 </div>
 
                 {/* Editable Status Message */}
                 <div className="flex items-center gap-3 border-b pb-2">
-                    <MessageSquare size={20} className="text-blue-500" />
+                    <MessageSquare size={20} className="" />
                     <input 
                         type="text" 
                         className="bg-transparent text-lg outline-none" 
@@ -113,20 +144,20 @@ const Profile = ({ user }) => {
             </div>
 
             {/* Blocked Users */}
-            <div className="mt-6 p-4 border border-blue-300 rounded-lg ">
-                <h3 className="text-xl font-semibold text-blue-700 flex items-center gap-2">
+            <div className="mt-6 p-4 border  rounded-lg ">
+                <h3 className="text-xl font-semibold  flex items-center gap-2">
                     <Lock size={20} /> Blocked Users
                 </h3>
                 {user.blockedUsers.length > 0 ? (
                     <ul className="mt-2 space-y-2">
                         {user.blockedUsers.map((blockedUser, index) => (
-                            <li key={index} className="text-gray-800 bg-whjite p-2 rounded-md shadow-sm">
+                            <li key={index} className="bg-whjite p-2 rounded-md shadow-sm">
                                 {blockedUser}
                             </li>
                         ))}
                     </ul>
                 ) : (
-                    <p className="text-gray-500 mt-2">No blocked users</p>
+                    <p className=" mt-2">No blocked users</p>
                 )}
             </div>
         </motion.div>

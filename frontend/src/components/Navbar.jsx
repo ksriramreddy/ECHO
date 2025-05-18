@@ -1,6 +1,6 @@
 import React from 'react';
 import echo from '../../public/echolightlogo.png'
-import { LogOut, Settings, User } from 'lucide-react';
+import { LogOut, Settings, User ,Home} from 'lucide-react';
 import axiosInstance from '../lib/axios';
 import { useDispatch } from 'react-redux';
 import { setIsAuthenticated, setUser } from '../store/user.store';
@@ -29,16 +29,22 @@ const Navbar = () => {
   }
 
   return (
-    <div className='w-full text-black bg-white dark:bg-white flex flex-row items-center rounded-lg p-1 justify-between'>
+    <div className='w-full flex flex-row items-center rounded-lg p-1 justify-between shadow-md bg-base-300'>
       <Link to={'/'}>
       <div className='  w-[100px] h-[65px] flex items-center justify-center'>
         <img src={echo} className='w-[100px] h-[50px]' alt="" />
       </div>
       </Link>
       <div className='flex gap-5 sm:gap-6'>
+        <Link to={'/'}>
+          <div className='flex flex-row items-center hover: justify-center gap-1 cursor-pointer'>
+            <Home strokeWidth={1} size={22} /> 
+            <span className='text-xl hidden sm:block'>Home</span>
+          </div>
+        </Link>
         <Link to={'/profile'}>
           <div className='flex flex-row items-center hover: justify-center gap-1 cursor-pointer'>
-            <User strokeWidth={1} size={22} color='black'/> 
+            <User strokeWidth={1} size={22} /> 
             <span className='text-xl hidden sm:block'>Profile</span>
           </div>
         </Link>
@@ -49,7 +55,7 @@ const Navbar = () => {
           </div>
         </Link> */}
         <button onClick={handleLogout} className='mr-4 flex flex-row items-center justify-center gap-1 cursor-pointer'>
-          <LogOut  strokeWidth={1} size={22} color='black'/> 
+          <LogOut  strokeWidth={1} size={22} /> 
           <span className='text-xl hidden sm:block '>LogOut</span>
         </button>
       </div>

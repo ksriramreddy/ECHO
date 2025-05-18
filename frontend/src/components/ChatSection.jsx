@@ -61,7 +61,7 @@ const ChatSection = () => {
 
 
   return (
-    <div className='flex flex-col h-full w-[100%] overflow-hidden text-black '>
+    <div className='flex flex-col h-full bg-base-200 shadow-2xl w-[100%] overflow-hidden chat-shadow '>
       <ChatHeader user={selectedUser} />
       {/* <ChatMessages /> */}
       {/* <ChatSkeleton/> */}
@@ -69,10 +69,10 @@ const ChatSection = () => {
         {
           isLoading ? <ChatSkeleton /> :
             selectedUser && messages.length > 0 ? messages.map((message, index) => (
-              <div key={index} className={`bg-blue-300 text-[20px] relative mb-1 p-3 w-fit rounded-lg pl-3  pr-3 ${message.senderId === selectedUser?._id ? ' self-start' : 'self-end'}`} ref={messageEndRef}>
+              <div key={index} className={`bg-blue-300  text-[20px] relative mb-1 p-3 w-fit rounded-lg pl-3  pr-3 ${message.senderId === selectedUser?._id ? ' self-start' : 'self-end'}`} ref={messageEndRef}>
                 {message.image && <img src={message.image} alt="image" className='contain rounded-md' height={200} width={200} />}
                 {message.text}
-                <div className='absolute bottom-0.5 right-1 text-[10px] font-bold text-gray-500'>{new Date(message.createdAt).toLocaleTimeString().slice(0, 5)}</div>
+                <div className='absolute bottom-0.5 right-1 text-[10px] font-bold '>{new Date(message.createdAt).toLocaleTimeString().slice(0, 5)}</div>
               </div>
             )) : ECHO ?
 

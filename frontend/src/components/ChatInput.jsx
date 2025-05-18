@@ -105,12 +105,12 @@ const ChatInput = () => {
               <img src={previewImage} alt="image" className='contain' height={50} width={50} />
           }
           <div className='absolute top-0 cursor-pointer '>
-            <X size={10} onClick={handleRemoveImage} color='white' className='bg-black rounded-full'/>
+            <X size={10} onClick={handleRemoveImage} color='white' className=' rounded-full'/>
           </div>
         </div>)}
       </div>
       <form onSubmit={handleSubmit}>
-        <div className='flex items-center border border-gray-300 justify-between w-full h-12 bg-gray-200 p-2'>
+        <div className='flex items-center border  justify-between w-full h-12  p-2'>
           <input
             type="text"
             value={input} 
