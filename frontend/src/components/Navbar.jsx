@@ -29,7 +29,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className='w-full text-black bg-white flex flex-row items-center rounded-lg p-1 justify-between'>
+    <div className='w-full text-black bg-white dark:bg-white flex flex-row items-center rounded-lg p-1 justify-between'>
       <Link to={'/'}>
       <div className='  w-[100px] h-[65px] flex items-center justify-center'>
         <img src={echo} className='w-[100px] h-[50px]' alt="" />

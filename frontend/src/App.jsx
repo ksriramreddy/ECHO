@@ -37,7 +37,7 @@ const App = () => {
   }
   
   return (
-    <div  className='pl-10 pr-10  dar:text-white' data-theme="lght">
+    <div  className='pl-10 pr-10  dark:text-white' data-theme="dark">
       {
         isAuthenticated && <Navbar/>
       }

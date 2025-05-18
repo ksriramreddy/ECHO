@@ -13,7 +13,7 @@ const ChatSection = () => {
   const { selectedUser, ECHO, aiChat, aiTyping } = useSelector(state => state.chat);
   // console.log("Selected user from chat section",selectedUser);
   // const {subscribeToMessages,unsubscribeFromMessages} = useSocketIO()
-  const { subscribeToMessages, unsubscribeFromMessages, messages, getMessages, socket } = useSocketStore()
+  const { subscribeToMessages, unsubscribeFromMessages, messages, getMessages, socket, isAITyping } = useSocketStore()
   const [isLoading, setIsLoading] = React.useState(false)
   const dispatch = useDispatch()
   const messageEndRef = useRef(null)
@@ -58,7 +58,7 @@ const ChatSection = () => {
 
   const styleComponent = ""
   console.log("is ai typing", aiTyping);
-  
+
 
   return (
     <div className='flex flex-col h-full w-[100%] overflow-hidden text-black '>
@@ -74,26 +74,37 @@ const ChatSection = () => {
                 {message.text}
                 <div className='absolute bottom-0.5 right-1 text-[10px] font-bold text-gray-500'>{new Date(message.createdAt).toLocaleTimeString().slice(0, 5)}</div>
               </div>
-            )) : ECHO ? aiChat.map((msg, i) => {
-              return (
-                <>
-                <div key={i} className='flex flex-col gap-2'>
-                  <div className={`bg-blue-300 text-[20px] relative max-w-[50%] mb-1 p-3 w-fit rounded-lg pl-3  pr-3 ${i%2==0 ? ' self-end' : 'self-start'}`} ref={messageEndRef}>
-                    {msg.replace(/\*\*(.*?)\*\*/g, '\n$1').replace(/\*\s*/g, '\n')}
-                  </div>
-                  {/* <div className={`bg-blue-300 text-[20px] relative max-w-[50%] mb-1 p-3 w-fit rounded-lg pl-3  pr-3 ${msg.prompt ? ' self-start' : 'self-end'}`} ref={messageEndRef}>
+            )) : ECHO ?
+
+              <>{
+              aiChat.map((msg, i) => {
+                return (
+                  <>
+                    <div key={i} className='flex flex-col gap-2'>
+                      <div className={`bg-blue-300 text-[20px] relative max-w-[50%] mb-1 p-3 w-fit rounded-lg pl-3  pr-3 ${i % 2 == 0 ? ' self-end' : 'self-start'}`} ref={messageEndRef}>
+                        {msg.replace(/\*\*(.*?)\*\*/g, '\n$1').replace(/\*\s*/g, '\n')}
+                      </div>
+                      {/* <div className={`bg-blue-300 text-[20px] relative max-w-[50%] mb-1 p-3 w-fit rounded-lg pl-3  pr-3 ${msg.prompt ? ' self-start' : 'self-end'}`} ref={messageEndRef}>
                     {msg}
                   </div> */}
-                </div>
+                    </div>
+                  </> 
+                )
+              })}
+
                 {
-                  aiTyping && 
-                  <div className={`bg-blue-300 text-[20px] relative max-w-[50%] mb-1 p-3 w-fit rounded-lg pl-3  pr-3`} ref={messageEndRef}>
-                    "..."
-                  </div>
-                }
-                </>
-              )
-            }) : <ChatPlaceholder />
+                    isAITyping &&
+                    <div className={`bg-blue-300 text-[20px] relative max-w-[50%] mb-1 p-3 w-fit rounded-lg pl-3  pr-3`} ref={messageEndRef}>
+                      <div className="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    </div>
+                  }
+              </>
+              :
+              <ChatPlaceholder />
         }
       </div>
       <ChatInput />

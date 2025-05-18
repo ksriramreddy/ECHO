@@ -45,7 +45,7 @@ const Profile = ({ user }) => {
 
     return (
         <motion.div 
-            className="bg-white shadow-lg p-8 rounded-lg max-w-3xl w-full mx-auto mt-10 border border-blue-200"
+            className="bg-whit shadow-lg p-8 rounded-lg max-w-3xl w-full mx-auto mt-10 border border-blue-200"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -113,14 +113,14 @@ const Profile = ({ user }) => {
             </div>
 
             {/* Blocked Users */}
-            <div className="mt-6 p-4 border border-blue-300 rounded-lg bg-blue-50">
+            <div className="mt-6 p-4 border border-blue-300 rounded-lg ">
                 <h3 className="text-xl font-semibold text-blue-700 flex items-center gap-2">
                     <Lock size={20} /> Blocked Users
                 </h3>
                 {user.blockedUsers.length > 0 ? (
                     <ul className="mt-2 space-y-2">
                         {user.blockedUsers.map((blockedUser, index) => (
-                            <li key={index} className="text-gray-800 bg-white p-2 rounded-md shadow-sm">
+                            <li key={index} className="text-gray-800 bg-whjite p-2 rounded-md shadow-sm">
                                 {blockedUser}
                             </li>
                         ))}

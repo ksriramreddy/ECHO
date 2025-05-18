@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {X,Image, Send,Loader} from 'lucide-react'
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import axiosInstance from '../lib/axios';
 import axios from 'axios';
 import { setAIChat, setAITyping, setMessages } from '../store/chat.store';
 import { useSocketStore } from '../socket.ioStore/socket.ioStore';
+import useSocketIO from '../hooks/useSocket.io';
 const ChatInput = () => {
   const [input, setInput] = useState('');
   const [previewImage, setPreviewImage] = useState(null);
@@ -15,6 +16,7 @@ const ChatInput = () => {
   const {getMessages,messages,userTyping}  = useSocketStore()
   const [isTyping, setIsTyping] = useState(false);
   const fileInputRef = useRef();
+  const {setIsAITyping,isAITyping}= useSocketStore()
   function handleImageChange(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -34,7 +36,12 @@ const ChatInput = () => {
     setPreviewImage(null);
     fileInputRef.current.value = null; // Clear the file input value
   }
+    useEffect(() => {
+  console.log("aiTyping state changed:", isAITyping);
+}, [isAITyping]);
   async function handleSendMessageToAI(e){
+    // dispatch(setAITyping(true))
+    setIsAITyping(true)
     e.preventDefault()
     if(!input) { return; }
     // if its loading prevent sending new message
@@ -42,24 +49,24 @@ const ChatInput = () => {
     console.log("Sending message to AI",aiChat);
     const prompt = input
     setInput('')
-    dispatch(setAITyping(true))
-    console.log("is ai typing>>>>>>>>>",aiTyping);
+    console.log("is ai typing>>>>>>>>>",isAITyping);
     try {
       setIsTyping(true)
-      dispatch(setAIChat([...aiChat, input]))
       axiosInstance.post('/gemini',{prompt, past: aiChat}) 
       .then((resp)=>{
-        
         dispatch(setAIChat([...aiChat,input, resp.data.resp])) // add the new message to the aiChat array
         console.log(">>>>>>>>>>>>>>>>",aiChat);
+    setIsAITyping(false)
+
       })
     } catch (error) {
       toast.error('Failed to send message!');
     }
     finally {
-      dispatch(setAITyping(false))
+    // setIsAITyping(true)
     }
   }
+
   const handleSubmit = (e)=>{
     e.preventDefault()
     if(selectedUser) handleSendMessage(e)

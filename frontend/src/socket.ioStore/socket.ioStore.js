@@ -7,6 +7,7 @@ export const useSocketStore  = create((set,get)=>({
     socket       : null,
     onlineUsers  : [],
     messages     : [],
+    isAITyping : false,
     getMessages : (messages) =>{
         set({messages})
     },
@@ -52,6 +53,7 @@ export const useSocketStore  = create((set,get)=>({
             socket.emit('typing', users)
         }   
     },
-    
-
+    setIsAITyping : (arg) =>{
+        set({isAITyping : arg})
+    }
 }))
