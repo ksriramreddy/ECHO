@@ -61,7 +61,7 @@ const ChatSection = () => {
 
 
   return (
-    <div className='flex flex-col h-full bg-base-200 shadow-2xl w-[100%] overflow-hidden chat-shadow '>
+    <div className='flex h-[calc(100vh-100px)] flex-col  bg-base-200 shadow-2xl w-[100%] overflow-hidden chat-shadow '>
       <ChatHeader user={selectedUser} />
       {/* <ChatMessages /> */}
       {/* <ChatSkeleton/> */}
