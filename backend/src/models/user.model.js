@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
     },
     lastSeen : {
         type : Date,
-        default : new Date()
+        default :  Date.now()
     },
     statusMessage : {
         type : String,

@@ -29,13 +29,13 @@ export const signup = async (req, res) => {
 
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
-        const date = Date.now
+        // const date =  Date.now
         const newUser = new User({
             userName,
             fullName,
             email,
             password: hashedPassword,
-            lastSeen : date
+            lastSeen : Date.now()
         })
 
         if (newUser) {
@@ -58,7 +58,7 @@ export const signup = async (req, res) => {
             return res.status(400).json({message: "Failed to create user"})
         }
     } catch (error) {
-        console.log(`Error creating user: ${error.message}`)
+        console.log(`Error creating user 1: ${error.message}`)
         res.status(500).json({message: "Server error"})
     }
 }
