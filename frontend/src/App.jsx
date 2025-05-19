@@ -40,7 +40,7 @@ const App = () => {
   }
   
   return (
-    <div  className='pl-10 pr-10 bg-base-100' data-theme={`${theme? "dark" : "light"}`}>
+    <div  className='md:pl-10 md:pr-10 bg-base-100' data-theme={`${theme? "dark" : "light"}`}>
       {
         isAuthenticated && <Navbar/>
       }
